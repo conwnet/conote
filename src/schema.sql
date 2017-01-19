@@ -1,0 +1,19 @@
+CREATE TABLE IF NOT EXISTS `note` (
+  `id` VARCHAR(63) PRIMARY KEY NOT NULL,
+  `author_id` VARCHAR(63) NOT NULL,
+  `prev_id` VARCHAR(63) NOT NULL,
+  `next_id` VARCHAR(63) NOT NULL,
+  `title` VARCHAR(255) NOT NULL,
+  `content` LONGTEXT NOT NULL,
+  `public` BOOLEAN NOT NULL,
+  `create_at` REAL NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` VARCHAR(63) PRIMARY KEY NOT NULL,
+  `username` VARCHAR(127) NOT NULL,
+  `password` VARCHAR(127) NOT NULL,
+  `email` VARCHAR(127) NOT NULL,
+  `power` BIGINT NOT NULL,
+  `create_at` REAL NOT NULL
+);
