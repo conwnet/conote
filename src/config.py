@@ -6,3 +6,4 @@ db = configs['db']
 
 session = configs['session']
 
+headers = configs['headers']

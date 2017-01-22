@@ -11,9 +11,8 @@ async def response_factory(app, handler):
         else:
             resp = web.Response(body=str(r).encode())
         resp.content_type = 'application/json'
-        resp.headers['Access-Control-Allow-Origin'] = '*'
-        resp.headers['Access-Control-Allow-Headers'] = 'Content-Type,Accept'
-        resp.headers['Access-Control-Allow-Credentials'] = "true"
+        for key in config.headers:
+            resp.headers[key] = ', '.join(config.headers[key])
         return resp
     return response
 
