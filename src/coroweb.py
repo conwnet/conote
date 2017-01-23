@@ -32,14 +32,14 @@ class RequestHandler(object):
                 params = await request.json()
                 return await self._func(request, params)
             except:
-                #raise
+                raise
                 pass
         elif request.method == 'GET':
             params = {}
             for k, v in request.match_info.items():
                 params[k] = v
             return await self._func(request, params)
-        return '{}'
+        return '{ "error": "Exception" }'
 
 def add_routes(app, module_name):
     n = module_name.rfind('.')

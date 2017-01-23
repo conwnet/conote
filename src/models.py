@@ -20,6 +20,12 @@ class Note(Model):
 class User(Model):
     __table__ = 'user'
 
+    def fill(self, username, password, email, power):
+        self.username = username
+        self.password = password
+        self.email = email
+        self.power = power
+
     id = StringField(primary_key=True, default=next_id, ddl='varchar(63)')
     username = StringField(ddl='varchar(127)')
     password = StringField(ddl='varchar(127)')

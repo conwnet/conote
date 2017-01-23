@@ -147,7 +147,7 @@ class Model(dict, metaclass=ModelMetaclass):
         return value
 
     @classmethod
-    async def findAll(cls, where=None, args=None, **kw):
+    async def fetchall(cls, where=None, args=None, **kw):
         sql = [cls.__select__]
         if where:
             sql.append('where')
@@ -173,7 +173,7 @@ class Model(dict, metaclass=ModelMetaclass):
         return [cls(**r) for r in rs]
 
     @classmethod
-    async def findNumber(cls, selectField, where=None, args=None):
+    async def findNumber(cls, selectField='count(id)', where=None, args=None):
         sql = ['select %s _num_ from `%s`' % (selectField, cls.__table__)]
         if where:
             sql.append('where')
@@ -184,8 +184,8 @@ class Model(dict, metaclass=ModelMetaclass):
         return rs[0]['_num_']
 
     @classmethod
-    async def find(cls, pk):
-        rs = await select('%s where `%s`=?' % (cls.__select__, cls.__primary_key__), [pk], 1)
+    async def fetchone(cls, where=None):
+        rs = await select('%s where %s' % (cls.__select__, where), None, 1)
         if len(rs) == 0:
             return None
         return cls(**rs[0])
