@@ -1,0 +1,4 @@
+PyMySQL==0.7.9
+aiohttp==1.2.0
+aiomysql==0.0.9
+async-timeout==1.1.0

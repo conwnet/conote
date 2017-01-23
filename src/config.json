@@ -6,7 +6,30 @@
     "password": "",
     "database": "conote"
   },
+  "server": {
+    "host": "0.0.0.0",
+    "port": 9001
+  },
   "session": {
     "secret": "nEtCoN"
+  },
+  "headers": {
+    "Access-Control-Allow-Origin": [
+      "http://localhost",
+      "http://127.0.0.1"
+    ],
+    "Access-Control-Allow-Methods": [
+      "OPTIONS",
+      "GET",
+      "POST",
+      "PUT"
+    ],
+    "Access-Control-Allow-Headers": [
+      "Content-Type",
+      "Accept"
+    ],
+    "Access-Control-Allow-Credentials": [
+      "true"
+    ]
   }
 }
