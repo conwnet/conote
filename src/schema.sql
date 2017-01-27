@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `note` (
   `next_id` VARCHAR(63) NOT NULL,
   `title` VARCHAR(255) NOT NULL,
   `content` LONGTEXT NOT NULL,
-  `public` BOOLEAN NOT NULL,
+  `public` int NOT NULL DEFAULT 0,
   `create_at` REAL NOT NULL
 );
 

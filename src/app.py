@@ -5,15 +5,15 @@ import orm, json, config, base64
 from cryptography import fernet
 from aiohttp_session import setup, cookie_storage, session_middleware
 
-
 async def response_format(app, handler):
     async def response(request):
         r = await handler(request)
         if isinstance(r, dict):
             resp = web.Response(body=json.dumps(r).encode())
+            resp.content_type = 'application/json'
         else:
             resp = web.Response(body=str(r).encode())
-        resp.content_type = 'application/json'
+            resp.content_type = 'text/plain'
         for key in config.headers:
             resp.headers[key] = ', '.join(config.headers[key])
         return resp

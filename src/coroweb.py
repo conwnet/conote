@@ -56,7 +56,7 @@ def add_routes(app, module_name):
             method = getattr(fn, '__method__', None)
             path = getattr(fn, '__route__', None)
             if method and path:
-                if not asyncio.iscoroutinefunction(fn) and not inspect.isgeneratorfunction(fn):
-                    fn = asyncio.coroutine(fn)
+                #if not asyncio.iscoroutinefunction(fn) and not inspect.isgeneratorfunction(fn):
+                #    fn = asyncio.coroutine(fn)
                 app.router.add_route(method, path, RequestHandler(app, fn))
                 app.router.add_route('OPTIONS', path, lambda x: '{}')

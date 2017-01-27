@@ -173,15 +173,8 @@ class Model(dict, metaclass=ModelMetaclass):
         return [cls(**r) for r in rs]
 
     @classmethod
-    async def findNumber(cls, selectField='count(id)', where=None, args=None):
-        sql = ['select %s _num_ from `%s`' % (selectField, cls.__table__)]
-        if where:
-            sql.append('where')
-            sql.append(where)
-        rs = await select(' '.join(sql), args, 1)
-        if len(rs) == 0:
-            return None
-        return rs[0]['_num_']
+    async def find(cls, pk):
+        return await cls.fetchone("`%s`='%s'" % ('id', pk))
 
     @classmethod
     async def fetchone(cls, where=None):
@@ -191,15 +184,15 @@ class Model(dict, metaclass=ModelMetaclass):
         return cls(**rs[0])
 
     async def save(self):
-        args = list(map(self.getValueOrDefault, self.__fields__))
-        args.append(self.getValueOrDefault(self.__primary_key__))
-        rows = await execute(self.__insert__, args)
-        return rows == 1
-
-    async def update(self):
-        args = list(map(self.getValue, self.__fields__))
-        args.append(self.getValue(self.__primary_key__))
-        rows = await execute(self.__update__, args)
+        pk = self.getValue(self.__primary_key__)
+        if pk:
+            args = list(map(self.getValue, self.__fields__))
+            args.append(pk)
+            rows = await execute(self.__update__, args)
+        else:
+            args = list(map(self.getValueOrDefault, self.__fields__))
+            args.append(self.getValueOrDefault(self.__primary_key__))
+            rows = await execute(self.__insert__, args)
         return rows == 1
 
     async def remove(self):
