@@ -130,25 +130,28 @@ async def save_note(request, params):
     public = params.get('public')
 
     # check input
-    if not (title and content and public):
+    if not (note_id, title and content and public):
         return { 'error': 'Bad submit' }
 
-    ## check permission
-    if note_id:
-        note = await models.Note.find(note_id)
-        if not ((note and note.author_id == user_id) or (note.public & 2)):
+    ## check if note exists
+    note = await models.Note.find(note_id)
+
+    ## create a new one if note is not exists
+    if not note:
+        new_note = models.Note()
+        new_note.fill(user_id, '0', '0', title, content, public)
+        await new_note.save()
+    ## update it if note is exists, keep the linked list structure
+    else:
+        if note.author_id == user_id or (note.public & 2):
+            new_note = models.Note()
+            new_note.fill(user_id, note.id, '0', title, content, public)
+            await new_note.save()
+            note.next_id = new_note.id
+            note.save()
+        else:
             return {'error': 'Permission denied'}
-
-    ## create a new note
-    new_note = models.Note()
-    new_note.fill(user_id, note_id or '0', '0', title, content, public)
-    await new_note.save()
-
-    ## set old note's next_id
-    if note_id:
-        note.next_id = new_note.id
-        await note.save()
-    return {'error': None}
+    return {'error': None, 'id': new_note.id}
 
 @get('/note')
 @logined
@@ -157,7 +160,7 @@ async def get_notes(request, params):
     id = session.get('id')
     notes = {}
     for note in await models.Note.fetchall("`author_id`=? and `next_id`=?", (id, '0')):
-        notes[note.id] = { 'author_id: ': note.author_id}
+        notes[note.id] = { 'title: ': note.title}
     return { 'error': None, 'notes': notes }
 
 
@@ -166,6 +169,19 @@ async def get_notes(request, params):
 async def get_note_by_id(request, params):
     session = await get_session(request)
     id = session.get('id')
+    note = await models.Note.find(params.get('id'))
+    if note.author_id == id or (note.public & 4):
+        return {'error': None,
+                    'note': {
+                        'id': note.id,
+                        'title': note.title,
+                        'author_id': note.author_id,
+                        'content': note.content,
+                        'public': note.public,
+                        'create_at': note.create_at}
+                }
+    else:
+        return {'error': 'Permission denied'}
 
 
 @get('/su')
@@ -181,9 +197,3 @@ async def exit(request, params):
     session['id'] = '0'
     session['power'] = 1
     return { 'error': None, 'Tip': 'You have exited super power!!!' }
-
-@get('/test')
-async def test(request, params):
-    user = await models.User.find('40d8872ee44a11e69c646817294b73a4')
-    user = await user.f(pk='40d8872ee44a11e69c646817294b73a4')
-    return {'error': user.username}
