@@ -16,6 +16,10 @@ async def response_format(app, handler):
             resp.content_type = 'text/plain'
         for key in config.headers:
             resp.headers[key] = ', '.join(config.headers[key])
+        if 'Origin' in request.headers and 'Access-Control-Allow-Origin' in config.headers and request.headers['Origin'] in config.headers['Access-Control-Allow-Origin']:
+            resp.headers['Access-Control-Allow-Origin'] = request.headers['Origin']
+        else:
+            resp.headers['Access-Control-Allow-Origin'] = ''
         return resp
     return response
 

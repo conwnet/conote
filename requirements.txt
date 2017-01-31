@@ -1,0 +1,14 @@
+aiohttp==1.2.0
+aiohttp-session==0.8.0
+aiomysql==0.0.9
+async-timeout==1.1.0
+cffi==1.9.1
+chardet==2.3.0
+cryptography==1.7.2
+idna==2.2
+multidict==2.1.4
+pyasn1==0.1.9
+pycparser==2.17
+PyMySQL==0.7.9
+six==1.10.0
+yarl==0.8.1
