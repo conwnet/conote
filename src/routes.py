@@ -160,7 +160,7 @@ async def get_notes(request, params):
     id = session.get('id')
     notes = {}
     for note in await models.Note.fetchall("`author_id`=? and `next_id`=?", (id, '0')):
-        notes[note.id] = { 'title: ': note.title}
+        notes[note.id] = { 'title': note.title}
     return { 'error': None, 'notes': notes }
 
 
